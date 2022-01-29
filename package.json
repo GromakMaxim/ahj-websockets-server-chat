@@ -1,0 +1,30 @@
+{
+  "homepage": "https://github.com/netology-code/ahj-homeworks/tree/simplification/sse-ws",
+  "name": "webpack5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src\\js\\server.js",
+    "prestart": "npm install"
+  },
+  "author": "coursar",
+  "license": "MIT",
+  "dependencies": {
+    "@koa/cors": "^3.1.0",
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "ws": "^8.4.2"
+  },
+  "engines": {
+    "node": "16.x"
+  },
+  "devDependencies": {
+    "koa-bodyparser": "^4.3.0"
+  },
+  "optionalDependencies": {
+    "utf-8-validate": "^5.0.8"
+  }
+}
