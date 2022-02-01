@@ -14,7 +14,7 @@ function onConnect(wsClient) {
         'oper': 'registration',
     }
     whoAreYou = JSON.stringify(whoAreYou);
-    wsClient.send(JSON.stringify({action:'WHOAREYOU', data: whoAreYou}));
+    wsClient.send(JSON.stringify({action: 'WHOAREYOU', data: whoAreYou}));
 
     wsClient.on('close', function () {
         for (let [key, value] of registration.getClients()) {
@@ -30,11 +30,12 @@ function onConnect(wsClient) {
             switch (jsonMessage.action) {
                 case 'IAMNEW':
                     if (data.oper === 'new_user') {
-                        let response = await registration.registerClient(data.who, wsClient);
+                        let response = await registration.registerClient(data, wsClient);
                         if (response.status === 'ok') {
-                            console.log(response)
                             response = JSON.stringify(response);
-                            wsClient.send(JSON.stringify({action: 'WELCOME', data: response}));
+                            for (let client of wss.clients) {
+                                client.send(JSON.stringify({action: 'WELCOME', data: response}));
+                            }
                         } else {
                             response = JSON.stringify(response);
                             console.log(response)
