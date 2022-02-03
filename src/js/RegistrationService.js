@@ -11,7 +11,7 @@ class RegistrationService {
             this.clients.set(key, client);
             this.clientsContent.set(key, data.payload);
             console.log("+1! size now: " + this.clientsContent.size)
-            let payload = await this.makePayload()
+            let payload = await this.makePayload();
             return {
                 "status": "ok",
                 "oper": "new_user",
@@ -24,7 +24,31 @@ class RegistrationService {
             "oper": "new_user",
             "who": key,
         };
+    }
 
+    async changeAvatar(key, content) {
+        console.log(content)
+        if (this.clients.has(key) && this.clientsContent.has(key)) {
+            let obj = this.clientsContent.get(key);
+            obj.pic = content;
+            this.clientsContent.set(key, obj);
+
+            let response = {
+                "status": 'ok',
+                "oper": "avatar_changed",
+                "who": key,
+                "changeTo": content
+            }
+            console.log(response)
+            return response;
+
+        } else {
+            return {
+                "status": 'err',
+                "oper": "avatar_changed",
+                "who": key,
+            }
+        }
     }
 
     async makePayload() {
