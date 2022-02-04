@@ -39,7 +39,6 @@ class RegistrationService {
                 "who": key,
                 "changeTo": content
             }
-            console.log(response)
             return response;
 
         } else {

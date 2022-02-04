@@ -17,9 +17,25 @@ function onConnect(wsClient) {
     wsClient.send(JSON.stringify({action: 'WHOAREYOU', data: whoAreYou}));
 
     wsClient.on('close', function () {
+        let user;
         for (let [key, value] of registration.getClients()) {
-            if (wsClient === value) registration.deleteClient(key);
+            if (wsClient === value) {
+                registration.deleteClient(key);
+                user = key;
+                break;
+            }
         }
+
+        let obj = {
+            'oper': 'user_left',
+            'who': user,
+        }
+
+        obj = JSON.stringify(obj);
+        for (let client of wss.clients) {
+            client.send(JSON.stringify({action: 'GOODBYE', data: obj}));
+        }
+
         console.log('Пользователь отключился');
     });
 
@@ -30,7 +46,6 @@ function onConnect(wsClient) {
             switch (jsonMessage.action) {
                 case 'AVATAR':
                     if (data.oper === "avatar_changed") {
-                        console.log(data)
                         let response = await registration.changeAvatar(data.who, data.changeTo);
                         if (response.status === 'ok') {
                             response = JSON.stringify(response);
@@ -50,19 +65,10 @@ function onConnect(wsClient) {
                             }
                         } else {
                             response = JSON.stringify(response);
-                            console.log(response)
                             wsClient.send(JSON.stringify({action: 'IDNYOU', data: response}));
                             wsClient.close(1000, 'access denied');
                         }
                     }
-                    break;
-                case 'ECHO':
-                    wsClient.send(jsonMessage.data);
-                    break;
-                case 'PING':
-                    setTimeout(function () {
-                        wsClient.send('PONG');
-                    }, 2000);
                     break;
                 case 'MSG':
                     console.log(JSON.stringify(jsonMessage))
