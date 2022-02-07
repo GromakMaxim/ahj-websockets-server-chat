@@ -26,8 +26,29 @@ class RegistrationService {
         };
     }
 
+    async changeStatus(key, newStatus) {
+        if (this.clients.has(key) && this.clientsContent.has(key)) {
+            let entry = this.clientsContent.get(key);
+            entry.status = newStatus;
+            this.clientsContent.set(key, entry);
+
+            let response = {
+                "status": "ok",
+                "oper": "status_changed",
+                "who": key,
+                "changeTo": newStatus,
+            }
+            return response;
+        } else {
+            return {
+                "status": 'err',
+                "oper": "status_changed",
+                "who": key,
+            }
+        }
+    }
+
     async changeAvatar(key, content) {
-        console.log(content)
         if (this.clients.has(key) && this.clientsContent.has(key)) {
             let obj = this.clientsContent.get(key);
             obj.pic = content;

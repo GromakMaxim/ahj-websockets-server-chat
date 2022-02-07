@@ -44,14 +44,21 @@ function onConnect(wsClient) {
             let jsonMessage = JSON.parse(message);
             let data = JSON.parse(jsonMessage.data);
             switch (jsonMessage.action) {
+                case 'STATUS':
+                    if (data.oper === 'status_changed') {
+                        console.log(data)
+                        let response = await registration.changeStatus(data.who, data.changeTo);
+                        response = JSON.stringify(response);
+                        for (let client of wss.clients) {
+                            client.send(JSON.stringify({action: 'STATUS', data: response}));
+                        }
+                    }
                 case 'AVATAR':
                     if (data.oper === "avatar_changed") {
                         let response = await registration.changeAvatar(data.who, data.changeTo);
-                        if (response.status === 'ok') {
-                            response = JSON.stringify(response);
-                            for (let client of wss.clients) {
-                                client.send(JSON.stringify({action: 'AVATAR', data: response}));
-                            }
+                        response = JSON.stringify(response);
+                        for (let client of wss.clients) {
+                            client.send(JSON.stringify({action: 'AVATAR', data: response}));
                         }
                     }
                     break;
