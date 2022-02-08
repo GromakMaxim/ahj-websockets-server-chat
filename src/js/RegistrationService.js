@@ -27,6 +27,7 @@ class RegistrationService {
     }
 
     async changeStatus(key, newStatus) {
+        newStatus = newStatus.substring(0, 20);
         if (this.clients.has(key) && this.clientsContent.has(key)) {
             let entry = this.clientsContent.get(key);
             entry.status = newStatus;
