@@ -1,11 +1,17 @@
-const WebSocketServer = require('ws');
 const RegistrationService = require("./RegistrationService");
+const express = require('express');
 
-PORT = 9999;
+const PORT = process.env.PORT || 9999;
+const INDEX = '/index.html';
 
-const wss = new WebSocketServer.Server({port: PORT});
+const server = express()
+   // .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+    .listen(PORT, () => console.log(`Listening on ${PORT}`));
+
+
+const { Server } = require('ws');
+const wss = new Server({ server });
 const registration = new RegistrationService();
-
 
 wss.on('connection', onConnect);
 
@@ -92,5 +98,3 @@ function onConnect(wsClient) {
         }
     });
 }
-
-console.log('Сервер запущен на ' + PORT + ' порту');
